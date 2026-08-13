@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI UI 灵感库 · 按设计问题浏览</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">AIUI</span>
+    <span class="tagline">AI 助手界面灵感 · 按设计问题浏览</span>
+  </div>
+  <div class="search">
+    <input id="search" type="search" placeholder="搜索 App 或设计问题…" />
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-title">设计问题</div>
+    <ul id="cat-list"></ul>
+  </aside>
+
+  <main class="content">
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty" hidden>没有匹配的截图，换个关键词试试。</div>
+  </main>
+</div>
+
+<div id="modal" class="modal" hidden>
+  <div class="modal-backdrop"></div>
+  <div class="modal-card">
+    <button class="modal-close" id="modal-close" aria-label="关闭">&times;</button>
+    <div class="modal-stage">
+      <button class="nav prev" id="nav-prev" aria-label="上一步">&lsaquo;</button>
+      <div class="modal-img" id="modal-img"></div>
+      <button class="nav next" id="nav-next" aria-label="下一步">&rsaquo;</button>
+      <div class="dots" id="modal-dots"></div>
+    </div>
+    <div class="modal-side">
+      <div class="modal-meta">
+        <span class="chip" id="modal-problem"></span>
+        <h3 id="modal-app"></h3>
+        <div class="modal-platform" id="modal-platform"></div>
+        <div class="step-caption" id="modal-step"></div>
+        <p id="modal-note"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

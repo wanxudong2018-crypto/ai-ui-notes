@@ -1,0 +1,9 @@
+# 含飞书凭据，禁止提交
+config.json
+
+# Python
+__pycache__/
+*.pyc
+
+# 系统
+.DS_Store

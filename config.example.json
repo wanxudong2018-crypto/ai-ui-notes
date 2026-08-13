@@ -1,0 +1,15 @@
+{
+  "app_id": "你的飞书自建应用 App ID",
+  "app_secret": "你的飞书自建应用 App Secret",
+  "app_token": "多维表格的 app_token（URL 里 /base/ 后面那段）",
+  "table_id": "数据表的 table_id（tblXXXX）",
+  "columns": {
+    "problem": "问题分类",
+    "app": "App 名称",
+    "platform": "平台",
+    "images": "图片 URLs",
+    "steps": "步骤说明",
+    "note": "整体说明"
+  },
+  "output": "data.js"
+}
