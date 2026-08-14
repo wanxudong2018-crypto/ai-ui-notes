@@ -136,8 +136,11 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 34px 14px 13px;
-  background: linear-gradient(to top, rgba(0,0,0,.62), rgba(0,0,0,0));
+  padding: 38px 14px 13px;
+  background: linear-gradient(to top,
+    rgba(0,0,0,.72) 0%,
+    rgba(0,0,0,.55) 35%,
+    rgba(0,0,0,0) 100%);
   color: #fff;
 }
 .chip {
