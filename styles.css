@@ -78,67 +78,82 @@ body {
 
 .content { flex: 1; padding: 20px 22px; }
 
+/* 瀑布流布局：像花瓣网一样把每张图都完整展示 */
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
+  column-count: 5;
+  column-gap: 16px;
 }
 
-.card {
-  background: var(--panel);
-  border: 1px solid var(--line);
+.pin {
+  break-inside: avoid;
+  margin-bottom: 16px;
   border-radius: 14px;
   overflow: hidden;
+  background: var(--panel);
   cursor: pointer;
-  transition: transform .12s ease, box-shadow .12s ease;
-}
-.card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(31,35,41,.10); }
-
-.card-media {
   position: relative;
-  aspect-ratio: 9 / 16;
-  background: #eef0f3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(31,35,41,.06);
+  transition: transform .15s ease, box-shadow .15s ease;
 }
-.card-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pin:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(31,35,41,.14);
+}
 
-.badge {
+.pin-media {
+  position: relative;
+  width: 100%;
+  background: #eef0f3;
+}
+.pin-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 悬浮信息层 */
+.pin-info {
   position: absolute;
-  right: 8px;
-  bottom: 8px;
-  background: rgba(0,0,0,.55);
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.70) 0%, rgba(0,0,0,.25) 45%, transparent 72%);
   color: #fff;
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 999px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 14px;
+  opacity: 0;
+  transition: opacity .18s ease;
   pointer-events: none;
 }
+.pin:hover .pin-info { opacity: 1; }
+
+.pin-chip {
+  font-size: 11px;
+  background: var(--accent);
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 999px;
+  display: inline-block;
+  width: fit-content;
+  margin-bottom: 6px;
+}
+.pin-app { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+.pin-step { font-size: 12px; color: rgba(255,255,255,.85); }
 
 .ph {
-  padding: 14px;
+  padding: 22px 14px;
   text-align: center;
   color: var(--sub);
   font-size: 13px;
   line-height: 1.5;
 }
 
-.card-body { padding: 11px 13px; }
-.chip {
-  display: inline-block;
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 999px;
-  margin-bottom: 7px;
-}
-.card-app { font-weight: 700; font-size: 15px; }
-.card-note { color: var(--sub); font-size: 12.5px; margin-top: 5px; line-height: 1.45; }
-
 .empty { color: var(--sub); text-align: center; padding: 60px 0; }
+
+/* 响应式列数 */
+@media (max-width: 1500px) { .grid { column-count: 4; } }
+@media (max-width: 1160px) { .grid { column-count: 3; } }
+@media (max-width: 860px)  { .grid { column-count: 2; } }
 
 /* modal —— 竖图优先：桌面左图右文，手机上下堆叠 */
 .modal { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; }
@@ -254,6 +269,11 @@ body {
   .sidebar ul { display: flex; gap: 8px; }
   .sidebar li { white-space: nowrap; margin: 0; }
   .search input { width: 160px; }
+
+  .grid { column-count: 2; column-gap: 10px; }
+  .pin { margin-bottom: 10px; border-radius: 10px; }
+  /* 手机上默认显示信息层，避免用户不知道点哪儿 */
+  .pin-info { opacity: 1; background: linear-gradient(to top, rgba(0,0,0,.6), transparent 60%); padding: 10px; }
 
   /* 弹框在手机上改为上下堆叠，图片占上半屏 */
   .modal-card { flex-direction: column; max-width: 96vw; width: 96vw; max-height: 96vh; }

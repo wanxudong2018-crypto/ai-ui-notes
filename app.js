@@ -50,55 +50,63 @@
     return el;
   }
 
-  function mediaEl(d, n) {
-    var arr = imgs(d);
-    var wrap = document.createElement("div");
-    wrap.className = "card-media";
-    var url = arr[n] || "";
+  // 瀑布流里的单个图钉（每张截图一张）
+  function createPin(record, imgIndex) {
+    var arr = imgs(record);
+    var url = arr[imgIndex] || "";
+    var pin = document.createElement("div");
+    pin.className = "pin";
+
+    var media = document.createElement("div");
+    media.className = "pin-media";
+
     if (url) {
       var img = document.createElement("img");
       img.loading = "lazy";
       img.src = url;
-      img.alt = d.app || "";
-      img.onerror = function () { wrap.innerHTML = ""; wrap.appendChild(placeholder(d, n)); };
-      wrap.appendChild(img);
+      img.alt = (record.app || "") + " 步骤" + (imgIndex + 1);
+      img.onerror = function () {
+        media.innerHTML = "";
+        media.appendChild(placeholder(record, imgIndex));
+      };
+      media.appendChild(img);
     } else {
-      wrap.appendChild(placeholder(d, n));
+      media.appendChild(placeholder(record, imgIndex));
     }
-    if (arr.length > 1) {
-      var badge = document.createElement("span");
-      badge.className = "badge";
-      badge.textContent = "共 " + arr.length + " 步";
-      wrap.appendChild(badge);
-    }
-    return wrap;
+
+    // 悬浮信息层
+    var info = document.createElement("div");
+    info.className = "pin-info";
+    info.innerHTML =
+      '<span class="pin-chip">' + esc(record.problem || "") + "</span>" +
+      '<div class="pin-app">' + esc(record.app || "") + "</div>" +
+      '<div class="pin-step">步骤 ' + (imgIndex + 1) + " / " + arr.length + "</div>";
+    media.appendChild(info);
+
+    pin.appendChild(media);
+    pin.onclick = function () { openModal(record, imgIndex); };
+    return pin;
   }
 
+  // 把每个 record 里的每张图都展开成独立图钉
   function renderGrid() {
     var q = (search.value || "").trim().toLowerCase();
-    var items = data.filter(function (d) {
+    var filtered = data.filter(function (d) {
       var okCat = activeCat === "全部" || d.problem === activeCat;
       var hay = [d.app, d.problem, d.note].concat(steps(d)).join(" ").toLowerCase();
       var okQ = !q || hay.indexOf(q) !== -1;
       return okCat && okQ;
     });
+
     grid.innerHTML = "";
-    empty.hidden = items.length > 0;
-    items.forEach(function (d) {
-      var card = document.createElement("div");
-      card.className = "card";
-      card.appendChild(mediaEl(d, 0));
-      var body = document.createElement("div");
-      body.className = "card-body";
-      var st = steps(d);
-      body.innerHTML =
-        '<span class="chip">' + esc(d.problem || "") + "</span>" +
-        '<div class="card-app">' + esc(d.app || "") + "</div>" +
-        '<div class="card-note">' + esc(st[0] || d.note || "") + "</div>";
-      card.appendChild(body);
-      card.onclick = function () { openModal(d); };
-      grid.appendChild(card);
+    var count = 0;
+    filtered.forEach(function (d) {
+      imgs(d).forEach(function (_, i) {
+        grid.appendChild(createPin(d, i));
+        count++;
+      });
     });
+    empty.hidden = count > 0;
   }
 
   function renderStage() {
@@ -140,8 +148,9 @@
     document.getElementById("nav-next").style.display = show ? "flex" : "none";
   }
 
-  function openModal(d) {
-    cur = d; idx = 0;
+  function openModal(d, startIdx) {
+    cur = d;
+    idx = startIdx || 0;
     document.getElementById("modal-problem").textContent = d.problem || "";
     document.getElementById("modal-app").textContent = d.app || "";
     document.getElementById("modal-platform").textContent = d.platform ? "平台：" + d.platform : "";
