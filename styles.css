@@ -90,6 +90,7 @@ body {
 }
 
 .card {
+  position: relative;
   background: #ffffff;
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -112,7 +113,7 @@ body {
 .cover-badge {
   position: absolute;
   right: 10px;
-  bottom: 10px;
+  top: 10px;
   background: rgba(0,0,0,.55);
   color: #fff;
   font-size: 12px;
@@ -129,18 +130,28 @@ body {
   line-height: 1.5;
 }
 
-.card-body { padding: 13px 15px 15px; background: #ffffff; }
+/* 卡片信息悬浮在封面图底部 */
+.card-body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 34px 14px 13px;
+  background: linear-gradient(to top, rgba(0,0,0,.62), rgba(0,0,0,0));
+  color: #fff;
+}
 .chip {
   display: inline-block;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: rgba(255,255,255,.18);
+  color: #fff;
   font-size: 11px;
   padding: 3px 8px;
   border-radius: 999px;
-  margin-bottom: 7px;
+  margin-bottom: 6px;
+  backdrop-filter: blur(2px);
 }
-.card-app { font-weight: 700; font-size: 15px; }
-.card-note { color: var(--sub); font-size: 12.5px; margin-top: 5px; line-height: 1.45; }
+.card-app { font-weight: 700; font-size: 15px; color: #fff; }
+.card-note { color: rgba(255,255,255,.85); font-size: 12.5px; margin-top: 4px; line-height: 1.45; }
 
 .empty { color: var(--sub); text-align: center; padding: 60px 0; }
 
