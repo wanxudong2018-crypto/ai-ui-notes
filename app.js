@@ -48,33 +48,38 @@
     return el;
   }
 
-  // 一个 App 流程 = 一张卡片，里面竖向堆叠这个流程的所有截图
+  // 一个 App 流程 = 一张卡片，卡片只显示第一张作为封面
   function createCard(record) {
     var arr = imgs(record);
     var st = steps(record);
     var card = document.createElement("div");
     card.className = "card";
 
-    var stack = document.createElement("div");
-    stack.className = "card-stack";
+    var cover = document.createElement("div");
+    cover.className = "card-cover";
 
     if (arr.length) {
-      arr.forEach(function (url, i) {
-        var img = document.createElement("img");
-        img.loading = "lazy";
-        img.src = url;
-        img.alt = (record.app || "") + " 步骤" + (i + 1);
-        img.onerror = function () {
-          this.style.display = "none";
-          stack.appendChild(placeholder(record));
-        };
-        stack.appendChild(img);
-      });
+      var img = document.createElement("img");
+      img.loading = "lazy";
+      img.src = arr[0];
+      img.alt = (record.app || "") + " 封面";
+      img.onerror = function () {
+        this.style.display = "none";
+        cover.appendChild(placeholder(record));
+      };
+      cover.appendChild(img);
+      // 多张截图时显示角标，提示点开看更多
+      if (arr.length > 1) {
+        var badge = document.createElement("span");
+        badge.className = "cover-badge";
+        badge.textContent = arr.length + " 张";
+        cover.appendChild(badge);
+      }
     } else {
-      stack.appendChild(placeholder(record));
+      cover.appendChild(placeholder(record));
     }
 
-    card.appendChild(stack);
+    card.appendChild(cover);
 
     var body = document.createElement("div");
     body.className = "card-body";

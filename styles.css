@@ -99,15 +99,26 @@ body {
 }
 .card:hover { border-color: #d9d9d9; }
 
-.card-stack {
-  display: flex;
-  flex-direction: column;
+/* 卡片封面：只显示第一张截图，保持原始比例 */
+.card-cover {
+  position: relative;
   background: #f7f8fa;
 }
-.card-stack img {
+.card-cover img {
   width: 100%;
   height: auto;
   display: block;
+}
+.cover-badge {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  font-size: 12px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  pointer-events: none;
 }
 
 .ph {
