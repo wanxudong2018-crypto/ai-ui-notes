@@ -41,57 +41,56 @@
     });
   }
 
-  function placeholder(d, n) {
+  function placeholder(d) {
     var el = document.createElement("div");
     el.className = "ph";
-    el.innerHTML =
-      esc(d.app || "?") + "<br>" + esc(d.problem || "") +
-      (n != null ? " · 步骤" + (n + 1) : "");
+    el.innerHTML = esc(d.app || "?") + "<br>" + esc(d.problem || "");
     return el;
   }
 
-  // 瀑布流里的单个图钉（每张截图一张）
-  function createPin(record, imgIndex) {
+  // 一个 App 流程 = 一张卡片，里面竖向堆叠这个流程的所有截图
+  function createCard(record) {
     var arr = imgs(record);
-    var url = arr[imgIndex] || "";
-    var pin = document.createElement("div");
-    pin.className = "pin";
+    var st = steps(record);
+    var card = document.createElement("div");
+    card.className = "card";
 
-    var media = document.createElement("div");
-    media.className = "pin-media";
+    var stack = document.createElement("div");
+    stack.className = "card-stack";
 
-    if (url) {
-      var img = document.createElement("img");
-      img.loading = "lazy";
-      img.src = url;
-      img.alt = (record.app || "") + " 步骤" + (imgIndex + 1);
-      img.onerror = function () {
-        media.innerHTML = "";
-        media.appendChild(placeholder(record, imgIndex));
-      };
-      media.appendChild(img);
+    if (arr.length) {
+      arr.forEach(function (url, i) {
+        var img = document.createElement("img");
+        img.loading = "lazy";
+        img.src = url;
+        img.alt = (record.app || "") + " 步骤" + (i + 1);
+        img.onerror = function () {
+          this.style.display = "none";
+          stack.appendChild(placeholder(record));
+        };
+        stack.appendChild(img);
+      });
     } else {
-      media.appendChild(placeholder(record, imgIndex));
+      stack.appendChild(placeholder(record));
     }
 
-    // 悬浮信息层
-    var info = document.createElement("div");
-    info.className = "pin-info";
-    info.innerHTML =
-      '<span class="pin-chip">' + esc(record.problem || "") + "</span>" +
-      '<div class="pin-app">' + esc(record.app || "") + "</div>" +
-      '<div class="pin-step">步骤 ' + (imgIndex + 1) + " / " + arr.length + "</div>";
-    media.appendChild(info);
+    card.appendChild(stack);
 
-    pin.appendChild(media);
-    pin.onclick = function () { openModal(record, imgIndex); };
-    return pin;
+    var body = document.createElement("div");
+    body.className = "card-body";
+    body.innerHTML =
+      '<span class="chip">' + esc(record.problem || "") + "</span>" +
+      '<div class="card-app">' + esc(record.app || "") + "</div>" +
+      '<div class="card-note">' + esc(st[0] || record.note || "") + "</div>";
+    card.appendChild(body);
+
+    card.onclick = function () { openModal(record, 0); };
+    return card;
   }
 
-  // 把每个 record 里的每张图都展开成独立图钉
   function renderGrid() {
     var q = (search.value || "").trim().toLowerCase();
-    var filtered = data.filter(function (d) {
+    var items = data.filter(function (d) {
       var okCat = activeCat === "全部" || d.problem === activeCat;
       var hay = [d.app, d.problem, d.note].concat(steps(d)).join(" ").toLowerCase();
       var okQ = !q || hay.indexOf(q) !== -1;
@@ -99,14 +98,10 @@
     });
 
     grid.innerHTML = "";
-    var count = 0;
-    filtered.forEach(function (d) {
-      imgs(d).forEach(function (_, i) {
-        grid.appendChild(createPin(d, i));
-        count++;
-      });
+    empty.hidden = items.length > 0;
+    items.forEach(function (d) {
+      grid.appendChild(createCard(d));
     });
-    empty.hidden = count > 0;
   }
 
   function renderStage() {
@@ -117,10 +112,10 @@
     if (url) {
       var img = document.createElement("img");
       img.src = url;
-      img.onerror = function () { stage.innerHTML = ""; stage.appendChild(placeholder(cur, idx)); };
+      img.onerror = function () { stage.innerHTML = ""; stage.appendChild(placeholder(cur)); };
       stage.appendChild(img);
     } else {
-      stage.appendChild(placeholder(cur, idx));
+      stage.appendChild(placeholder(cur));
     }
 
     var dots = document.getElementById("modal-dots");
