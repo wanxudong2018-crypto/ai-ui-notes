@@ -31,6 +31,9 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install Pillow
+        run: python3 -m pip install -q --upgrade pip Pillow
+
       - name: Sync from Feishu -> data.js
         env:
           FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
@@ -38,6 +41,9 @@ jobs:
           FEISHU_APP_TOKEN: ${{ secrets.FEISHU_APP_TOKEN }}
           FEISHU_TABLE_ID: ${{ secrets.FEISHU_TABLE_ID }}
         run: python3 sync_feishu.py
+
+      - name: Compress images before deploy
+        run: python3 optimize_images.py
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
