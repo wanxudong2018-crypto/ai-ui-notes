@@ -135,13 +135,15 @@
     }
 
     var st = steps(cur);
-    var cap;
+    var stepLabel = document.getElementById("modal-step-label");
+    var stepText = document.getElementById("modal-step-text");
     if (arr.length > 1) {
-      cap = "步骤 " + (idx + 1) + " / " + arr.length + (st[idx] ? "：" + st[idx] : "");
+      stepLabel.textContent = "步骤 " + (idx + 1) + " / " + arr.length;
+      stepText.textContent = st[idx] || "";
     } else {
-      cap = st[0] || "";
+      stepLabel.textContent = "";
+      stepText.textContent = st[0] || "";
     }
-    document.getElementById("modal-step").textContent = cap;
 
     var show = arr.length > 1;
     document.getElementById("nav-prev").style.display = show ? "flex" : "none";

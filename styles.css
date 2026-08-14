@@ -255,6 +255,13 @@ body {
 .modal-meta h3 { margin: 10px 0 4px; font-size: 19px; }
 .modal-platform { color: var(--sub); font-size: 13px; }
 .step-caption { color: var(--accent); font-size: 13.5px; font-weight: 600; margin: 12px 0 0; min-height: 18px; }
+.step-caption .step-text {
+  display: block;
+  margin-top: 4px;
+  color: var(--text);
+  font-weight: 400;
+  line-height: 1.55;
+}
 .modal-meta p { color: var(--text); font-size: 14px; line-height: 1.65; margin: 8px 0 0; }
 
 @media (max-width: 720px) {
